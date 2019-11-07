@@ -164,6 +164,5 @@ string big::MUL(string number1, string number2)     //³Ë·¨
 
 string big::DIV(string number1, string number2) //³ı·¨
 {
-	int j;
 	return 0;
 }
