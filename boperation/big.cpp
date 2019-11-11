@@ -4,7 +4,7 @@
 #include "big.h"
 using namespace std;
 
-//ÔËËã·ûºÅ´¦Àí
+//è¿ç®—ç¬¦å·å¤„ç†
 string result;
 big::big(string b_number1, char b_ch, string b_number2)
 {
@@ -32,44 +32,44 @@ string big::get()
 }
 
 
-//±È½Ïº¯Êı£¬¿ÉÒÔ±È½ÏÁ½ÊıÊµ¼Ê´óĞ¡
+//æ¯”è¾ƒå‡½æ•°ï¼Œå¯ä»¥æ¯”è¾ƒä¸¤æ•°å®é™…å¤§å°
 
 
-inline int big::compare(string number1, string number2) //ÏàµÈ·µ»Ø0£¬´óÓÚ·µ»Ø1£¬Ğ¡ÓÚ·µ»Ø-1
+inline int big::compare(string number1, string number2) //ç›¸ç­‰è¿”å›0ï¼Œå¤§äºè¿”å›1ï¼Œå°äºè¿”å›-1
 {
 	if (number1.size() > number2.size())
 		return 1;
 	else if (number1.size() < number2.size())
 		return -1;
-	else return number1.compare(number2);     //Èô³¤¶ÈÏàµÈ£¬Ôò´ÓÍ·µ½Î²°´Î»±È½Ï
+	else return number1.compare(number2);     //è‹¥é•¿åº¦ç›¸ç­‰ï¼Œåˆ™ä»å¤´åˆ°å°¾æŒ‰ä½æ¯”è¾ƒ
 }
 
-//¼Ó·¨ÔËËã
-string big::ADD(string number1, string number2)         //¸ß¾«¶È¼Ó·¨
+//åŠ æ³•è¿ç®—
+string big::ADD(string number1, string number2)         //åŠ æ³•
 {
-	int sign = 1;//signÎª·ûºÅÎª
-	string num;//½á¹û
+	int sign = 1;//signä¸ºç¬¦å·ä¸º
+	string num;//ç»“æœ
 	if (number1[0] == '-')
 	{
-		if (number2[0] == '-')       //¸º¸º
+		if (number2[0] == '-')       //è´Ÿè´Ÿ
 		{
 			sign = -1;
-			num = ADD(number1.erase(0, 1), number2.erase(0, 1));//erase(first,last);É¾³ı´Ófirstµ½lastÖ®¼äµÄ×Ö·û
+			num = ADD(number1.erase(0, 1), number2.erase(0, 1));//erase(first,last);åˆ é™¤ä»firståˆ°lastä¹‹é—´çš„å­—ç¬¦
 		}
-		else             //¸ºÕı
+		else             //è´Ÿæ­£
 		{
 			num = SUB(number2, number1.erase(0, 1));
 		}
 	}
 	else
 	{
-		if (number2[0] == '-')        //Õı¸º
+		if (number2[0] == '-')        //æ­£è´Ÿ
 		{
 			num = SUB(number1, number2.erase(0, 1));
 		}
-		else                    //ÕıÕı£¬°ÑÁ½¸öÕûÊı¶ÔÆë£¬¶ÌÕûÊıÇ°Ãæ¼Ó0²¹Æë
+		else                    //æ­£æ­£ï¼ŒæŠŠä¸¤ä¸ªæ•´æ•°å¯¹é½ï¼ŒçŸ­æ•´æ•°å‰é¢åŠ 0è¡¥é½
 		{
-			string::size_type L1, L2;  //string::size_type³éÏóÒâÒåÊÇ³ß´çµ¥Î»ÀàĞÍ
+			string::size_type L1, L2;  //string::size_typeæŠ½è±¡æ„ä¹‰æ˜¯å°ºå¯¸å•ä½ç±»å‹
 			int i;
 			L1 = number1.size();
 			L2 = number2.size();
@@ -83,7 +83,7 @@ string big::ADD(string number1, string number2)         //¸ß¾«¶È¼Ó·¨
 				for (i = 0; i < L1 - L2; i++)
 					number2 = "0" + number2;
 			}
-			int int1 = 0, int2 = 0; //int2¼ÇÂ¼½øÎ»
+			int int1 = 0, int2 = 0; //int2è®°å½•è¿›ä½
 			for (i = number1.size() - 1; i >= 0; i--)
 			{
 				int1 = (int(number1[i]) - '0' + int(number2[i]) - '0' + int2) % 10;
@@ -94,15 +94,15 @@ string big::ADD(string number1, string number2)         //¸ß¾«¶È¼Ó·¨
 		}
 
 	}
-	//ÔËËã·û´¦Àí·ûºÅ
+	//è¿ç®—ç¬¦å¤„ç†ç¬¦å·
 	if ((sign == -1) && (num[0] != '0'))num = "-" + num;
 	return num;
 
 }
 
-string big::SUB(string number1, string number2)  //¼õ·¨
+string big::SUB(string number1, string number2)  //å‡æ³•
 {
-	int sign = 1; //signÎª·ûºÅÎ»
+	int sign = 1; //signä¸ºç¬¦å·ä½
 	string str;
 	int i, j;
 	if (number2[0] == '-')
@@ -124,7 +124,7 @@ string big::SUB(string number1, string number2)  //¼õ·¨
 		tempint = number1.size() - number2.size();
 		for (i = number2.size() - 1; i >= 0; i--)
 		{
-			if (number1[i + tempint] < number2[i])          //½èÎ»
+			if (number1[i + tempint] < number2[i])          //å€Ÿä½
 			{
 				j = 1;
 				while (1)
@@ -150,19 +150,19 @@ string big::SUB(string number1, string number2)  //¼õ·¨
 		for (i = tempint - 1; i >= 0; i--)
 			str = number1[i] + str;
 	}
-	//È¥³ö½á¹ûÖĞ¶àÓàµÄÇ°µ¼0
+	//å»å‡ºç»“æœä¸­å¤šä½™çš„å‰å¯¼0
 	str.erase(0, str.find_first_not_of('0'));
 	if (str.empty())str = "0";
 	if ((sign == -1) && (str[0] != '0'))str = "-" + str;
 	return str;
 }
 
-string big::MUL(string number1, string number2)     //³Ë·¨ 
+string big::MUL(string number1, string number2)     //ä¹˜æ³• 
 {
 	return 0;
 }
 
-string big::DIV(string number1, string number2) //³ı·¨
+string big::DIV(string number1, string number2) //é™¤æ³•
 {
 	return 0;
 }
