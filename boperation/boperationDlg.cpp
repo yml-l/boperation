@@ -24,6 +24,7 @@ CboperationDlg::CboperationDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_BOPERATION_DIALOG, pParent)
 	, editv(_T(""))
 	, resultv(_T(""))
+	, remainder(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -35,6 +36,8 @@ void CboperationDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT3, editc);
 	DDX_Text(pDX, IDC_EDIT4, resultv);
 	DDX_Control(pDX, IDC_EDIT4, resultc);
+	DDX_Text(pDX, IDC_EDIT5, remainder);
+	DDX_Text(pDX, IDC_EDIT5, remainder);
 }
 
 BEGIN_MESSAGE_MAP(CboperationDlg, CDialogEx)
@@ -250,6 +253,9 @@ void CboperationDlg::OnBnClickedAc()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	editv = "";
+	resultv = "";
+	remainder="";
+
 	UpdateData(false);
 }
 
@@ -278,15 +284,16 @@ void CboperationDlg::OnBnClickedequal()
 	// TODO: 在此添加控件通知处理程序代码
 	int seat=1;//符号位置
 	string str;
-	string res;
+	string result;//结果
+	string remain;//余数
 	str = CW2A(editv.GetString());//CString转化为string
-	string number1, number2;
-	char ch;
+	string number1, number2;//运算数
+	char ch;//运算符
 	if (str.find_first_of('+')!=-1)
 	{
 		seat = str.find_first_of('+');
 	}
-	else if (str.find_first_of('-') != -1)
+	else if (str.find_first_of('-',1) != -1)//跳过负号
 	{
 		seat = str.find_first_of('-');
 	}
@@ -298,19 +305,29 @@ void CboperationDlg::OnBnClickedequal()
 	{
 		seat = str.find_first_of('/');
 	}
-	else
-		res = "没有输入运算符!";
+	else if (str.find_first_of('^') != -1)
+	{
+		seat = str.find_first_of('^');
+	}
+	else if (str.find_first_of('%') != -1)
+	{
+		seat = str.find_first_of('%');
+	}
+	else{
+		result = "没有输入运算符!";
+		}
 	if (seat != -1)
 	{
 		ch = str[seat];
 		number1 = str.substr(0, seat);
 		number2= str.substr(seat+1);
-		big value;
-		big(number1, ch, number2);
-		res = value.get();
+		big value=big(number1, ch, number2);
+		result = value.getresult();
+		remain = value.getremain();
 
 	}
-	resultv = CA2W(res.c_str());//string转化为CString 	
+	resultv = CA2W(result.c_str());//string转化为CString 	
+	remainder = CA2W(remain.c_str());
 	UpdateData(false);
 
 }

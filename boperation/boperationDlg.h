@@ -36,9 +36,9 @@ public:
 	afx_msg void OnBnClickedButton10();
 	afx_msg void OnStnClickedOperands1();
 	afx_msg void OnStnClickedOperands2();
-	CString editv;
+	CString editv;//±à¼­×Ö·û´®
 	CEdit editc;
-	CString resultv;
+	CString resultv;//½á¹û
 	CEdit resultc;
 	afx_msg void OnBnClicked0();
 	afx_msg void OnBnClicked1();
@@ -61,4 +61,5 @@ public:
 	afx_msg void OnEnChangeEdit4();
 	afx_msg void OnBnClickedequal();
 	afx_msg void OnEnChangeEdit3();
+	CString remainder;//ÓàÊý
 };
