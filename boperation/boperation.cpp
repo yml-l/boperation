@@ -15,6 +15,7 @@
 
 BEGIN_MESSAGE_MAP(CboperationApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
+	ON_COMMAND(ID_32771, &CboperationApp::show)
 END_MESSAGE_MAP()
 
 
@@ -100,3 +101,10 @@ BOOL CboperationApp::InitInstance()
 	return FALSE;
 }
 
+
+
+void CboperationApp::show()
+{
+	// TODO: 在此添加命令处理程序代码
+	
+}

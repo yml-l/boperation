@@ -9,6 +9,10 @@
 #include<string>
 #include<cmath>
 #include"big.h"
+#include <iostream>
+#include <cstring>
+#include <fstream>
+#include<sstream>
 using namespace std;
 
 #ifdef _DEBUG
@@ -18,8 +22,7 @@ using namespace std;
 
 // CboperationDlg 对话框
 
-
-
+CFont m_editFont;//字体全局变量
 CboperationDlg::CboperationDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_BOPERATION_DIALOG, pParent)
 	, editv(_T(""))
@@ -27,6 +30,8 @@ CboperationDlg::CboperationDlg(CWnd* pParent /*=NULL*/)
 	, remainder(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_cTest = new CTestDlg(this);
+	
 }
 
 void CboperationDlg::DoDataExchange(CDataExchange* pDX)
@@ -64,6 +69,10 @@ BEGIN_MESSAGE_MAP(CboperationDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_EDIT4, &CboperationDlg::OnEnChangeEdit4)
 	ON_BN_CLICKED(IDC_equal, &CboperationDlg::OnBnClickedequal)
 	ON_EN_CHANGE(IDC_EDIT3, &CboperationDlg::OnEnChangeEdit3)
+	ON_WM_SIZE()
+	ON_BN_CLICKED(IDC_BUTTON30, &CboperationDlg::OnBnClickedButton30)
+	ON_COMMAND(ID_32771, &CboperationDlg::newwin)
+	ON_EN_CHANGE(IDC_EDIT5, &CboperationDlg::OnEnChangeEdit5)
 END_MESSAGE_MAP()
 
 
@@ -72,14 +81,27 @@ END_MESSAGE_MAP()
 BOOL CboperationDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
+	
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
-
+	m_editFont.CreatePointFont(150, _T("宋体"));
+	GetDlgItem(Operands1)->SetFont(&m_editFont);
+	GetDlgItem(Operands2)->SetFont(&m_editFont);
+	GetDlgItem(Operands3)->SetFont(&m_editFont); 
+	GetDlgItem(IDC_EDIT3)->SetFont(&m_editFont);
+	GetDlgItem(IDC_EDIT4)->SetFont(&m_editFont);
+	GetDlgItem(IDC_EDIT5)->SetFont(&m_editFont); 
+	GetDlgItem(IDC_AC)->SetFont(&m_editFont);
+	GetDlgItem(IDC_BUTTON30)->SetFont(&m_editFont); 
+	
+	//editc.SetFont(&m_editFont);
 	// TODO: 在此添加额外的初始化代码
-
+	CRect rect;
+	GetClientRect(&rect);//取客户区大小
+	Old.x = rect.right - rect.left;
+	Old.y = rect.bottom - rect.top;
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -278,15 +300,30 @@ void CboperationDlg::OnEnChangeEdit4()
 
 	// TODO:  在此添加控件通知处理程序代码
 }
-
+void stnum(string str, int &m) {
+	for (int i = 1; i < str.length(); i++) {
+		if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '^' || str[i] == '%')++m;
+	}
+}
 void CboperationDlg::OnBnClickedequal()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int seat=1;//符号位置
+	int m = 0;
 	string str;
 	string result;//结果
 	string remain;//余数
 	str = CW2A(editv.GetString());//CString转化为string
+	stnum(str, m);
+	if (m > 1||str[0] == '+' || str[0] == '/' || str[0] == '*' || str[0] == '^' || str[0] == '%'
+		|| str[str.length()-1] == '+' || str[str.length() - 1]=='-' || str[str.length() - 1] == '*'
+		|| str[str.length() - 1] == '/' || str[str.length() - 1] == '^' || str[str.length() - 1] == '%') {
+		AfxMessageBox(_T("请输入正确的运算式！"));//错误处理
+		return;
+
+	}
+	
+
 	string number1, number2;//运算数
 	char ch;//运算符
 	if (str.find_first_of('+')!=-1)
@@ -314,7 +351,8 @@ void CboperationDlg::OnBnClickedequal()
 		seat = str.find_first_of('%');
 	}
 	else{
-		result = "没有输入运算符!";
+		AfxMessageBox(_T("没有输入运算符！"));
+		return;
 		}
 	if (seat != -1)
 	{
@@ -333,6 +371,8 @@ void CboperationDlg::OnBnClickedequal()
 }
 
 
+
+
 void CboperationDlg::OnEnChangeEdit3()
 {
 	// TODO:  如果该控件是 RICHEDIT 控件，它将不
@@ -343,4 +383,111 @@ void CboperationDlg::OnEnChangeEdit3()
 	// TODO:  在此添加控件通知处理程序代码
 	GetDlgItemText(IDC_EDIT3, editv);
 
+}
+
+void CboperationDlg::resize()
+{
+	float fsp[2];
+	POINT Newp; //获取现在对话框的大小
+	CRect recta;
+	GetClientRect(&recta);     //取客户区大小  
+	Newp.x = recta.right - recta.left;
+	Newp.y = recta.bottom - recta.top;
+	fsp[0] = (float)Newp.x / Old.x;
+	fsp[1] = (float)Newp.y / Old.y;
+	CRect Rect;
+	int woc;
+	CPoint OldTLPoint, TLPoint; //左上角
+	CPoint OldBRPoint, BRPoint; //右下角
+	HWND  hwndChild = ::GetWindow(m_hWnd, GW_CHILD);  //列出所有控件  
+	while (hwndChild)
+	{
+		woc = ::GetDlgCtrlID(hwndChild);//取得ID
+		GetDlgItem(woc)->GetWindowRect(Rect);
+		ScreenToClient(Rect);
+		OldTLPoint = Rect.TopLeft();
+		TLPoint.x = long(OldTLPoint.x*fsp[0]);
+		TLPoint.y = long(OldTLPoint.y*fsp[1]);
+		OldBRPoint = Rect.BottomRight();
+		BRPoint.x = long(OldBRPoint.x *fsp[0]);
+		BRPoint.y = long(OldBRPoint.y *fsp[1]);
+		Rect.SetRect(TLPoint, BRPoint);
+		GetDlgItem(woc)->MoveWindow(Rect, TRUE);
+		hwndChild = ::GetWindow(hwndChild, GW_HWNDNEXT);
+	}
+	Old = Newp;
+
+}
+
+void CboperationDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO: 在此处添加消息处理程序代码
+	// TODO: Add your message handler code here
+	if (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED) {
+		resize();
+	}
+}
+
+
+void CboperationDlg::OnBnClickedButton30()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	std::fstream fs;
+	std::ifstream ifs;
+
+	fs.open("E://aaa//boperation//data//data.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+	fs.close();
+	std::ofstream ofs;
+
+	CString cstr1;
+	GetDlgItem(IDC_EDIT3)->GetWindowText(cstr1);	
+	string str1 ;
+	str1 = CT2A(cstr1.GetString());
+
+	CString cstr2;
+	GetDlgItem(IDC_EDIT4)->GetWindowText(cstr2);
+	string str2;
+	str2 = CT2A(cstr2.GetString());
+
+	CString cstr3;
+	GetDlgItem(IDC_EDIT5)->GetWindowText(cstr3);
+	string str3;
+	str3 = CT2A(cstr3.GetString());
+
+
+	//AfxMessageBox(cstr1+"保存成功！");
+	ofs.open("E://aaa//boperation//data//data.txt", std::fstream::out | std::fstream::app);
+	if (!ofs) {
+		AfxMessageBox(_T("保存失败！"));
+		return;
+	}
+	if (str1.empty() || str2.empty() || str3.empty()) {
+		AfxMessageBox(_T("计算未完成！"));
+		return;
+	}
+	ofs <<str1+" = "+str2+"……"+str3<< endl;
+	ofs.close();
+	AfxMessageBox(_T("保存成功！"));
+
+}
+
+
+void CboperationDlg::newwin()
+{
+	// TODO: 在此添加命令处理程序代码
+	m_cTest->Create(IDD_DIALOG1, this);
+	
+}
+
+
+void CboperationDlg::OnEnChangeEdit5()
+{
+	// TODO:  如果该控件是 RICHEDIT 控件，它将不
+	// 发送此通知，除非重写 CDialogEx::OnInitDialog()
+	// 函数并调用 CRichEditCtrl().SetEventMask()，
+	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
+
+	// TODO:  在此添加控件通知处理程序代码
 }

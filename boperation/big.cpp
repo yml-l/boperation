@@ -136,25 +136,25 @@ string big::SUB(string number1, string number2)  //减法
 				j = 1;
 				while (1)
 				{
-					if (number1[tempint - j + i] == '0')
+					if (number1[tempint - j + i] == '0')//是0的话依次借位
 					{
 						number1[i + tempint - j] = '9';
 						j++;
 					}
 					else
 					{
-						number1[i + tempint - j] = char(int(number1[i + tempint - j]) - 1);
+						number1[i + tempint - j] = char(int(number1[i + tempint - j]) - 1);//被借位减1
 						break;
 					}
 				}
-				str = char(number1[i + tempint] - number2[i] + ':') + str;
+				str = char(number1[i + tempint] - number2[i] + ':') + str;//“:”的ascll码在“9”之后，可以理解为借位加“+10”
 			}
 			else
 			{
 				str = char(number1[i + tempint] - number2[i] + '0') + str;
 			}
 		}
-		for (i = tempint - 1; i >= 0; i--)
+		for (i = tempint - 1; i >= 0; i--)//补上之前的位数
 			str = number1[i] + str;
 	}
 	//去出结果中多余的前导0
@@ -189,7 +189,7 @@ string big::MUL(string number1, string number2)     //乘法
 		if (int3 != 0)
 		{
 			for (j = 1; j <= (int)(L2 - 1 - i); j++)
-				tempstr = "0" + tempstr;
+				tempstr = "0" + tempstr;//临时数补0
 			for (j = L1 - 1; j >= 0; j--)
 			{
 				int1 = (int3*(int(number1[j]) - '0') + int2) % 10;
@@ -251,10 +251,10 @@ void big::DIV(string number1,string number2, string &quotient, string &remainder
 		L1 = number1.size();
 		L2 = number2.size();
 		string tempstr;
-		tempstr.append(number1, 0, L2 - 1); //将str1中为值0到L2-1的字符串追加到tempstr
+		tempstr.append(number1, 0, L2 - 1); //将number1中为值0到L2-1的字符串追加到tempstr
 		for (int i = L2 - 1; i < L1; i++)  //模拟手工除法竖式
 		{
-			tempstr = tempstr + number1[i];
+			tempstr = tempstr + number1[i];//组成与除数相同的临时被除数
 			tempstr.erase(0, tempstr.find_first_not_of('0')); //在字符串中查找第一个与'0'不匹配的字符，返回它的位置
 			if (tempstr.empty())tempstr = "0";  //q.empty()，当队列空时，返回true
 			for (char ch = '9'; ch >= '0'; ch--) //试商

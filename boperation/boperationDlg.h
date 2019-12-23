@@ -4,15 +4,17 @@
 
 #pragma once
 #include "afxwin.h"
-
+#include "TestDlg.h"
 
 // CboperationDlg 对话框
 class CboperationDlg : public CDialogEx
 {
 // 构造
+	
 public:
 	CboperationDlg(CWnd* pParent = NULL);	// 标准构造函数
-
+	CTestDlg *m_cTest;
+	
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_BOPERATION_DIALOG };
@@ -61,5 +63,12 @@ public:
 	afx_msg void OnEnChangeEdit4();
 	afx_msg void OnBnClickedequal();
 	afx_msg void OnEnChangeEdit3();
+	void resize();
+	POINT Old;
+	
 	CString remainder;//余数
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnBnClickedButton30();
+	afx_msg void newwin();
+	afx_msg void OnEnChangeEdit5();
 };
