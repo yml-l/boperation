@@ -81,7 +81,7 @@ END_MESSAGE_MAP()
 BOOL CboperationDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-	
+	hAccel = ::LoadAccelerators(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_AC));
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
@@ -302,7 +302,8 @@ void CboperationDlg::OnEnChangeEdit4()
 }
 void stnum(string str, int &m) {
 	for (int i = 1; i < str.length(); i++) {
-		if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '^' || str[i] == '%')++m;
+		if (str[i] == '+' || str[i] == '*' || str[i] == '/' || str[i] == '^' || str[i] == '%')m=m+2;
+		if (str[i] == '-')++m;
 	}
 }
 void CboperationDlg::OnBnClickedequal()
@@ -314,11 +315,15 @@ void CboperationDlg::OnBnClickedequal()
 	string result;//结果
 	string remain;//余数
 	str = CW2A(editv.GetString());//CString转化为string
+	if (str.empty()) {
+		AfxMessageBox(_T("请输入运算式！"));//错误处理
+		return;
+	}
 	stnum(str, m);
-	if (m > 1||str[0] == '+' || str[0] == '/' || str[0] == '*' || str[0] == '^' || str[0] == '%'
+	if (m > 3||str[0] == '+' || str[0] == '/' || str[0] == '*' || str[0] == '^' || str[0] == '%'
 		|| str[str.length()-1] == '+' || str[str.length() - 1]=='-' || str[str.length() - 1] == '*'
 		|| str[str.length() - 1] == '/' || str[str.length() - 1] == '^' || str[str.length() - 1] == '%') {
-		AfxMessageBox(_T("请输入正确的运算式！"));//错误处理
+		AfxMessageBox(_T("请检查运算符！"));//错误处理
 		return;
 
 	}
@@ -330,10 +335,7 @@ void CboperationDlg::OnBnClickedequal()
 	{
 		seat = str.find_first_of('+');
 	}
-	else if (str.find_first_of('-',1) != -1)//跳过负号
-	{
-		seat = str.find_first_of('-');
-	}
+
 	else if (str.find_first_of('*') != -1)
 	{
 		seat = str.find_first_of('*');
@@ -349,6 +351,10 @@ void CboperationDlg::OnBnClickedequal()
 	else if (str.find_first_of('%') != -1)
 	{
 		seat = str.find_first_of('%');
+	}
+	else if (str.find_first_of('-', 1) != -1)//跳过负号
+	{
+		seat = str.find_first_of('-', 1);
 	}
 	else{
 		AfxMessageBox(_T("没有输入运算符！"));
@@ -467,7 +473,7 @@ void CboperationDlg::OnBnClickedButton30()
 		AfxMessageBox(_T("计算未完成！"));
 		return;
 	}
-	ofs <<str1+" = "+str2+"……"+str3<< endl;
+	ofs << str1+"   运算结果： "+str2+"   余数："+str3<< endl;
 	ofs.close();
 	AfxMessageBox(_T("保存成功！"));
 
@@ -490,4 +496,23 @@ void CboperationDlg::OnEnChangeEdit5()
 	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
 
 	// TODO:  在此添加控件通知处理程序代码
+}
+
+
+BOOL CboperationDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	//判断m_hCcel是否为空
+	
+		
+		if (::TranslateAccelerator(GetSafeHwnd(), hAccel, pMsg))
+		{
+			return true;
+		}
+
+		
+	
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+		
 }

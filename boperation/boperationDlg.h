@@ -14,7 +14,7 @@ class CboperationDlg : public CDialogEx
 public:
 	CboperationDlg(CWnd* pParent = NULL);	// 标准构造函数
 	CTestDlg *m_cTest;
-	
+	HACCEL hAccel;
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_BOPERATION_DIALOG };
@@ -71,4 +71,5 @@ public:
 	afx_msg void OnBnClickedButton30();
 	afx_msg void newwin();
 	afx_msg void OnEnChangeEdit5();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

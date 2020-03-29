@@ -1,4 +1,5 @@
 #include <iostream>
+#include<sstream>
 #include<cmath>
 #include<string>
 #include "big.h"
@@ -11,6 +12,11 @@ big::big(string b_number1, char b_ch, string b_number2)
 
 	string tresult;//临时结果
 	string tremain;//临时余数
+	string muln;//临时乘方
+	int i;
+	int n;
+	stringstream stream(b_number2);
+	stream >> n;
 	switch (b_ch)
 	{
 	case'+':
@@ -20,7 +26,12 @@ big::big(string b_number1, char b_ch, string b_number2)
 	case'*':
 		result = MUL(b_number1, b_number2); remain = "无"; break;
 	case'^':
-		result = MUL(b_number1, b_number1); remain = "无"; break;
+		muln = b_number1;
+		for (i = 1; i <n; i++) {
+			muln = MUL(b_number1, muln);
+		}
+		result = muln;
+		remain = "无"; break;
 	case'/':
 		DIV(b_number1, b_number2, tresult, tremain); result = tresult; remain = "无"; break;
 	case'%':
@@ -54,7 +65,7 @@ inline int big::compare(string number1, string number2) //相等返回0，大于返回1，
 //加法运算
 string big::ADD(string number1, string number2)         //加法
 {
-	int sign = 1;//sign为符号为
+	int sign = 1;//sign为符号位
 	string num;//结果
 	if (number1[0] == '-')
 	{
@@ -239,11 +250,13 @@ void big::DIV(string number1,string number2, string &quotient, string &remainder
 	{
 		quotient = "0";
 		remainder = number1;
+		return;
 	}
 	else if (res == 0)
 	{
 		quotient = "1";
 		remainder = "0";
+		return;
 	}
 	else
 	{
