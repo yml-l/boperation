@@ -13,6 +13,7 @@
 #include <cstring>
 #include <fstream>
 #include<sstream>
+#include <windows.h>
 using namespace std;
 
 #ifdef _DEBUG
@@ -308,71 +309,85 @@ void stnum(string str, int &m) {
 }
 void CboperationDlg::OnBnClickedequal()
 {
-	// TODO: 在此添加控件通知处理程序代码
-	int seat=1;//符号位置
-	int m = 0;
-	string str;
-	string result;//结果
-	string remain;//余数
-	str = CW2A(editv.GetString());//CString转化为string
-	if (str.empty()) {
-		AfxMessageBox(_T("请输入运算式！"));//错误处理
-		return;
-	}
-	stnum(str, m);
-	if (m > 3||str[0] == '+' || str[0] == '/' || str[0] == '*' || str[0] == '^' || str[0] == '%'
-		|| str[str.length()-1] == '+' || str[str.length() - 1]=='-' || str[str.length() - 1] == '*'
-		|| str[str.length() - 1] == '/' || str[str.length() - 1] == '^' || str[str.length() - 1] == '%') {
-		AfxMessageBox(_T("请检查运算符！"));//错误处理
-		return;
 
-	}
-	
 
-	string number1, number2;//运算数
-	char ch;//运算符
-	if (str.find_first_of('+')!=-1)
+	long start = GetTickCount();  //开始时间
 	{
-		seat = str.find_first_of('+');
-	}
 
-	else if (str.find_first_of('*') != -1)
-	{
-		seat = str.find_first_of('*');
-	}
-	else if (str.find_first_of('/') != -1)
-	{
-		seat = str.find_first_of('/');
-	}
-	else if (str.find_first_of('^') != -1)
-	{
-		seat = str.find_first_of('^');
-	}
-	else if (str.find_first_of('%') != -1)
-	{
-		seat = str.find_first_of('%');
-	}
-	else if (str.find_first_of('-', 1) != -1)//跳过负号
-	{
-		seat = str.find_first_of('-', 1);
-	}
-	else{
-		AfxMessageBox(_T("没有输入运算符！"));
-		return;
+
+
+		// TODO: 在此添加控件通知处理程序代码
+		int seat = 1;//符号位置
+		int m = 0;
+		string str;
+		string result;//结果
+		string remain;//余数
+		str = CW2A(editv.GetString());//CString转化为string
+		if (str.empty()) {
+			AfxMessageBox(_T("请输入运算式！"));//错误处理
+			return;
 		}
-	if (seat != -1)
-	{
-		ch = str[seat];
-		number1 = str.substr(0, seat);
-		number2= str.substr(seat+1);
-		big value=big(number1, ch, number2);
-		result = value.getresult();
-		remain = value.getremain();
+		stnum(str, m);
+		if (m > 3 || str[0] == '+' || str[0] == '/' || str[0] == '*' || str[0] == '^' || str[0] == '%'
+			|| str[str.length() - 1] == '+' || str[str.length() - 1] == '-' || str[str.length() - 1] == '*'
+			|| str[str.length() - 1] == '/' || str[str.length() - 1] == '^' || str[str.length() - 1] == '%') {
+			AfxMessageBox(_T("请检查运算符！"));//错误处理
+			return;
 
+		}
+
+
+		string number1, number2;//运算数
+		char ch;//运算符
+		if (str.find_first_of('+') != -1)
+		{
+			seat = str.find_first_of('+');
+		}
+
+		else if (str.find_first_of('*') != -1)
+		{
+			seat = str.find_first_of('*');
+		}
+		else if (str.find_first_of('/') != -1)
+		{
+			seat = str.find_first_of('/');
+		}
+		else if (str.find_first_of('^') != -1)
+		{
+			seat = str.find_first_of('^');
+		}
+		else if (str.find_first_of('%') != -1)
+		{
+			seat = str.find_first_of('%');
+		}
+		else if (str.find_first_of('-', 1) != -1)//跳过负号
+		{
+			seat = str.find_first_of('-', 1);
+		}
+		else {
+			AfxMessageBox(_T("没有输入运算符！"));
+			return;
+		}
+		if (seat != -1)
+		{
+			ch = str[seat];
+			number1 = str.substr(0, seat);
+			number2 = str.substr(seat + 1);
+			big value = big(number1, ch, number2);
+			result = value.getresult();
+			remain = value.getremain();
+
+		}
+		resultv = CA2W(result.c_str());//string转化为CString 	
+		remainder = CA2W(remain.c_str());
+		UpdateData(false);
+		
 	}
-	resultv = CA2W(result.c_str());//string转化为CString 	
-	remainder = CA2W(remain.c_str());
-	UpdateData(false);
+	long finish = GetTickCount();
+	long t = finish - start;
+	CString time = _T("");   //temp_value用来处理int值
+	time.Format(_T("%d"), t);//固定格式
+	AfxMessageBox(time);
 
 }
 

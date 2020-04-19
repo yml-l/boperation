@@ -16,6 +16,7 @@ public:
 	string SUB(string number1, string number2);			//¼õ·¨
 	string MUL(string number1, string number2);			//³Ë·¨ 
 	void DIV(string number1, string number2, string &quotient, string &remainder);		//³ı·¨
+	string POWER(string number1, string number2);
 	string big::getresult();
 	string big::getremain();
 	~big() {};   

@@ -26,12 +26,7 @@ big::big(string b_number1, char b_ch, string b_number2)
 	case'*':
 		result = MUL(b_number1, b_number2); remain = "无"; break;
 	case'^':
-		muln = b_number1;
-		for (i = 1; i <n; i++) {
-			muln = MUL(b_number1, muln);
-		}
-		result = muln;
-		remain = "无"; break;
+		result = POWER(b_number1, b_number2); remain = "无"; break;
 	case'/':
 		DIV(b_number1, b_number2, tresult, tremain); result = tresult; remain = "无"; break;
 	case'%':
@@ -224,8 +219,8 @@ void big::DIV(string number1,string number2, string &quotient, string &remainder
 	
 	if (number2 == "0")   //判断除数是否为0
 	{
-		quotient = "ERROR!";
-		remainder = "ERROR!";
+		quotient = "ERROR!除数为0！";
+		remainder = "ERROR!除数为0！";
 		return;
 	}
 	if (number1 == "0")     //判断被除数是否为0
@@ -291,4 +286,43 @@ void big::DIV(string number1,string number2, string &quotient, string &remainder
 	if ((sign2 == -1) && (remainder[0] != '0'))remainder = "-" + remainder;
 	
 }
+string big::POWER(string number1, string number2) //乘方
+{
+	if (number2[0] == '-')return"ERROR!指数为负！";
+	int index = std::stoi(number2);
+	string str="1";
+	if (index == 0) 
+	{  
+		return "1";
+	}
+	else if (index == 1)str = number1;
+	else
+	{
+		int tempIndex = index;
+		int power[50];
+		int i, j = 0;
+		int tempPower, tempre;
+		for (i = 0; tempIndex>0; i++) {
+			power[i] = tempIndex % 2;
+			tempIndex = tempIndex / 2;
+			j++;//计数
+		}
+		string strArray[50];
+		int n;
+		strArray[1] = number1;
+		for (n = 2; n <= j; n++) {
+			strArray[n] = MUL(strArray[n - 1], strArray[n - 1]);
+		}
+		int m; 
+		for (m = 0; m < j; m++) {
+			if (power[m] == 0) continue;
+			else {
+				str = MUL(str, strArray[m + 1]);
+			}
+		}
+	}
+	
+	return str;
+}
+
 
