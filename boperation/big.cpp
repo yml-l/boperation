@@ -259,7 +259,7 @@ void big::DIV(string number1,string number2, string &quotient, string &remainder
 		L1 = number1.size();
 		L2 = number2.size();
 		string tempstr;
-		tempstr.append(number1, 0, L2 - 1); //将number1中为值0到L2-1的字符串追加到tempstr
+		tempstr.append(number1, 0, L2 - 1); //将number1中0到L2-1的字符串追加到tempstr
 		for (int i = L2 - 1; i < L1; i++)  //模拟手工除法竖式
 		{
 			tempstr = tempstr + number1[i];//组成与除数相同的临时被除数

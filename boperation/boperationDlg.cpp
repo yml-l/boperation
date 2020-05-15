@@ -387,7 +387,7 @@ void CboperationDlg::OnBnClickedequal()
 	long t = finish - start;
 	CString time = _T("");   //temp_value用来处理int值
 	time.Format(_T("%d"), t);//固定格式
-	AfxMessageBox(time);
+	//AfxMessageBox(time);//标注时间
 
 }
 
